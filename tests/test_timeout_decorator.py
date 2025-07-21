@@ -23,7 +23,7 @@ def test_timeout_decorator_with_args_and_return_value():
         long_running_function_with_kwargs("arg1", arg2="arg2")
 
 
-def test_timeout_decorator_without_exception():
+def test_timeout_decorator_no_exception():
     @timeout_decorator(1)
     def short_running_function():
         time.sleep(0.5)
@@ -33,4 +33,31 @@ def test_timeout_decorator_without_exception():
         result = short_running_function()
     except TimeoutException:
         pytest.fail("TimeoutException was raised unexpectedly")
+    assert result == "finished"
+
+
+def test_timeout_decorator_custom_exception():
+    class CustomException(TimeoutException):
+        pass
+
+    @timeout_decorator(1, exception=CustomException)
+    def long_running_function():
+        time.sleep(2)
+
+    with pytest.raises(CustomException):
+        long_running_function()
+
+
+def test_timeout_decorator_custom_exception_no_exception():
+    class CustomException(TimeoutException):
+        pass
+
+    @timeout_decorator(1, exception=CustomException)
+    def short_running_function():
+        time.sleep(0.5)
+
+    try:
+        result = short_running_function()
+    except CustomException:
+        pytest.fail("CustomException was raised unexpectedly")
     assert result == "finished"
