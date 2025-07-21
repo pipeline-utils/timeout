@@ -55,6 +55,7 @@ def test_timeout_decorator_custom_exception_no_exception():
     @timeout_decorator(1, exception=CustomException)
     def short_running_function():
         time.sleep(0.5)
+        return "finished"
 
     try:
         result = short_running_function()

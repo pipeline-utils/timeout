@@ -1,5 +1,6 @@
 import signal
 from contextlib import contextmanager
+from typing import Type
 
 
 class TimeoutException(TimeoutError):
@@ -8,7 +9,7 @@ class TimeoutException(TimeoutError):
 
 @contextmanager
 def timeout_manager(
-    seconds: int, message: str = "Operation timed out!", exception: type[TimeoutException] = TimeoutException
+    seconds: int, message: str = "Operation timed out!", exception: Type[TimeoutException] = TimeoutException
 ):
     def signal_handler(signum, frame):
         raise exception(message)
@@ -22,7 +23,7 @@ def timeout_manager(
 
 
 def timeout_decorator(
-    seconds: int, message: str = "Operation timed out!", exception: type[TimeoutException] = TimeoutException
+    seconds: int, message: str = "Operation timed out!", exception: Type[TimeoutException] = TimeoutException
 ):
     """Decorator to apply a timeout to a function."""
 
@@ -36,4 +37,4 @@ def timeout_decorator(
     return decorator
 
 
-__all__ = ["timeout_manager", "timeout_decorator", "TimeoutException"]
+__all__ = ["TimeoutException", "timeout_decorator", "timeout_manager"]
